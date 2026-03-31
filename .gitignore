@@ -1,0 +1,31 @@
+# ================= ENV =================
+.env
+backend/.env
+frontend/.env
+
+# ================= PYTHON =================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ================= DJANGO =================
+db.sqlite3
+media/
+uploads/
+
+# ================= NODE =================
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ================= BUILD =================
+build/
+dist/
+
+# ================= OS =================
+.DS_Store
+Thumbs.db
+
+# ================= VSCODE =================
+.vscode/
