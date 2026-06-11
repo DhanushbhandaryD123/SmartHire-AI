@@ -27,6 +27,23 @@ const fadeUp = {
   }),
 };
 
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.12 },
+  },
+};
+
+const popIn = {
+  hidden: { opacity: 0, scale: 0.85, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
 function Home() {
   const navigate = useNavigate();
 
@@ -54,19 +71,23 @@ function Home() {
             </p>
 
             <div className="mt-8 flex justify-center md:justify-start gap-4">
-              <button
+              <motion.button
                 onClick={() => navigate("/careers")}
-                className="bg-orange-500 px-6 py-3 rounded-full hover:bg-orange-600 transition transform hover:scale-105"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-orange-500 px-6 py-3 rounded-full hover:bg-orange-600 transition"
               >
                 Explore Jobs
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
                 onClick={() => navigate("/register")}
-                className="border border-white px-6 py-3 rounded-full hover:bg-white hover:text-black transition transform hover:scale-105"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="border border-white px-6 py-3 rounded-full hover:bg-white hover:text-black transition"
               >
                 Get Started
-              </button>
+              </motion.button>
             </div>
           </motion.div>
 
@@ -83,25 +104,24 @@ function Home() {
       </section>
 
       {/* ===== STATS ===== */}
-      <section className="max-w-6xl mx-auto grid md:grid-cols-4 gap-6 px-6 pb-20">
+      <motion.section
+        className="max-w-6xl mx-auto grid md:grid-cols-4 gap-6 px-6 pb-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={staggerContainer}
+      >
         {[
           { title: "150+", desc: "Jobs Posted" },
           { title: "10K+", desc: "Candidates" },
           { title: "95%", desc: "Match Accuracy" },
           { title: "24/7", desc: "AI Screening" },
-        ].map((s, i) => (
-          <motion.div
-            key={s.title}
-            custom={i}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
-            variants={fadeUp}
-          >
+        ].map((s) => (
+          <motion.div key={s.title} variants={popIn} whileHover={{ scale: 1.06 }}>
             <Stat title={s.title} desc={s.desc} />
           </motion.div>
         ))}
-      </section>
+      </motion.section>
 
       {/* ===== SERVICES ===== */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
@@ -125,7 +145,13 @@ function Home() {
           End-to-end recruitment tools powered by AI — from sourcing to onboarding.
         </motion.p>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid md:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={staggerContainer}
+        >
           {[
             {
               title: "Resume Screening",
@@ -157,22 +183,21 @@ function Home() {
               desc: "Approve, reject, and manage candidates from a single dashboard.",
               img: "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&fit=crop&w=600&q=80",
             },
-          ].map((service, i) => (
+          ].map((service) => (
             <motion.div
               key={service.title}
-              custom={i % 3}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={fadeUp}
-              whileHover={{ y: -8 }}
+              variants={popIn}
+              whileHover={{ y: -8, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               className="bg-white/10 rounded-xl overflow-hidden backdrop-blur transition shadow-lg hover:shadow-2xl"
             >
-              <img
+              <motion.img
                 src={service.img}
                 alt={service.title}
                 className="w-full h-40 object-cover"
                 loading="lazy"
+                whileHover={{ scale: 1.08 }}
+                transition={{ duration: 0.4 }}
               />
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2 text-orange-400">
@@ -182,7 +207,7 @@ function Home() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ===== FEATURES ===== */}
@@ -197,7 +222,13 @@ function Home() {
           Powerful Features
         </motion.h2>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid md:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={staggerContainer}
+        >
           {[
             {
               icon: <FaRobot size={28} />,
@@ -235,19 +266,12 @@ function Home() {
               desc: "Get actionable insights into your recruitment pipeline performance.",
               img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
             },
-          ].map((f, i) => (
-            <motion.div
-              key={f.title}
-              custom={i % 3}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={fadeUp}
-            >
+          ].map((f) => (
+            <motion.div key={f.title} variants={popIn} whileHover={{ y: -6 }}>
               <Feature icon={f.icon} title={f.title} desc={f.desc} img={f.img} />
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ===== CLIENTS ===== */}
@@ -262,22 +286,24 @@ function Home() {
           Trusted by Teams
         </motion.h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-gray-300">
-          {["Google", "Amazon", "Microsoft", "StartupX"].map((name, i) => (
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 text-gray-300"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          variants={staggerContainer}
+        >
+          {["Google", "Amazon", "Microsoft", "StartupX"].map((name) => (
             <motion.div
               key={name}
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.4 }}
-              variants={fadeUp}
-              whileHover={{ scale: 1.05 }}
+              variants={popIn}
+              whileHover={{ scale: 1.08 }}
               className="bg-white/10 p-6 rounded-xl"
             >
               {name}
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ===== CTA ===== */}
@@ -292,12 +318,14 @@ function Home() {
           Ready to transform hiring?
         </h2>
 
-        <button
+        <motion.button
           onClick={() => navigate("/register")}
-          className="bg-orange-500 px-8 py-3 rounded-full hover:bg-orange-600 transition transform hover:scale-105"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-orange-500 px-8 py-3 rounded-full hover:bg-orange-600 transition"
         >
           Start Now
-        </button>
+        </motion.button>
       </motion.section>
 
       {/* ===== FOOTER ===== */}
@@ -326,7 +354,6 @@ function Home() {
             <h4 className="text-white font-semibold mb-3">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li><button onClick={() => navigate("/")} className="hover:text-orange-400 transition">Home</button></li>
-              <li><button onClick={() => navigate("/jobs")} className="hover:text-orange-400 transition">Jobs</button></li>
               <li><button onClick={() => navigate("/careers")} className="hover:text-orange-400 transition">Careers</button></li>
               <li><button onClick={() => navigate("/register")} className="hover:text-orange-400 transition">Get Started</button></li>
             </ul>

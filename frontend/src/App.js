@@ -6,7 +6,6 @@ import AdminLayout from "./components/AdminLayout";
 
 // Public
 import Home from "./pages/Home";
-import Jobs from "./pages/Jobs";
 import Careers from "./pages/Careers";
 import JobDetails from "./pages/JobDetails";
 import Apply from "./pages/Apply";
@@ -31,7 +30,6 @@ function App() {
 
         {/* PUBLIC */}
         <Route path="/" element={<Home />} />
-        <Route path="/jobs" element={<Jobs />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
 

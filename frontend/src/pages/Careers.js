@@ -8,7 +8,7 @@ function Careers() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getJobs().then(setJobs);
+    getJobs().then(res => setJobs(res?.data || []));
   }, []);
 
   return (
@@ -56,7 +56,7 @@ function Careers() {
 
               <div className="flex items-center gap-3">
                 <div className="bg-gray-200 w-10 h-10 rounded-full flex items-center justify-center font-bold">
-                  {job.title[0]}
+                  {job.title?.[0]}
                 </div>
 
                 <div>

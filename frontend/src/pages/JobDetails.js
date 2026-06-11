@@ -8,8 +8,8 @@ function JobDetails() {
   const [job, setJob] = useState(null);
 
   useEffect(() => {
-    getJobs().then(data => {
-      const found = data.find(j => j._id === id);
+    getJobs().then(res => {
+      const found = (res?.data || []).find(j => j._id === id);
       setJob(found);
     });
   }, [id]);
@@ -24,7 +24,7 @@ function JobDetails() {
       <p className="text-gray-600 mb-4">{job.description}</p>
 
       <p className="mb-6">
-        <b>Skills:</b> {job.keywords.join(", ")}
+        <b>Skills:</b> {job.keywords?.join(", ")}
       </p>
 
       <button

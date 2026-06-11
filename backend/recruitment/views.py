@@ -94,6 +94,7 @@ def apply_candidate(request):
         return Response({"error": str(e)}, status=500)
 
 
+
 # ================= JOBS =================
 @api_view(['GET', 'POST'])
 def get_jobs(request):

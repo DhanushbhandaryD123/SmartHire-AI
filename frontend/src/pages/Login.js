@@ -37,7 +37,7 @@ function Login() {
       } else if (data.user.role === "hr") {
         navigate("/dashboard");
       } else {
-        navigate("/jobs");
+        navigate("/careers");
       }
     } catch (err) {
       console.error(err);

@@ -38,12 +38,6 @@ function Navbar() {
           </NavLink>
 
           {role !== "hr" && (
-            <NavLink to="/jobs" className={linkClass}>
-              Jobs
-            </NavLink>
-          )}
-
-          {role !== "hr" && (
             <NavLink to="/careers" className={linkClass}>
               Careers
             </NavLink>
@@ -106,12 +100,6 @@ function Navbar() {
           <NavLink to="/" end className={linkClass} onClick={() => setMenuOpen(false)}>
             Home
           </NavLink>
-
-          {role !== "hr" && (
-            <NavLink to="/jobs" className={linkClass} onClick={() => setMenuOpen(false)}>
-              Jobs
-            </NavLink>
-          )}
 
           {role !== "hr" && (
             <NavLink to="/careers" className={linkClass} onClick={() => setMenuOpen(false)}>
