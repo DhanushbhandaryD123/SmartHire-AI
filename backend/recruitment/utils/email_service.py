@@ -31,7 +31,7 @@ def send_email(to_email, subject, message, attachment_path=None):
         server.send_message(msg)
         server.quit()
 
-        print("✅ Email sent")
+        print("Email sent")
 
     except Exception as e:
-        print("❌ Email failed:", str(e))
+        print("Email failed:", str(e))

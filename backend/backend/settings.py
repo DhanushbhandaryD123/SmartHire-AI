@@ -26,12 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0^ab+=(02a)0palylmeq5-pub-h39p@rt9s(#r=zvo5^4*t7i('
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    'django-insecure-0^ab+=(02a)0palylmeq5-pub-h39p@rt9s(#r=zvo5^4*t7i('
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else []
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -86,6 +89,11 @@ TEMPLATES = [
         },
     },
 ]
+
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 AUTH_USER_MODEL = 'users.User'

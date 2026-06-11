@@ -116,7 +116,7 @@ function JobCandidates() {
     } catch {
       toast.error("Approve failed");
     }
-  };
+  };  
 
   const handleReject = async (id) => {
     try {

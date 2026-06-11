@@ -24,5 +24,5 @@ urlpatterns = [
     path('api/', include('recruitment.urls')),
 
     # Auth APIs (IMPORTANT)
-    path('api/auth/', include('users.urls')),
+    path('api/', include('users.urls')),
 ]

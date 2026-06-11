@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/api";
 
 function Login() {
@@ -13,7 +13,9 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
+    // ✅ Validation
     if (!form.username || !form.password) {
       setError("All fields required");
       return;
@@ -22,10 +24,11 @@ function Login() {
     try {
       const data = await loginUser(form);
 
+      // ✅ Store token + role
       localStorage.setItem("token", data.access);
       localStorage.setItem("role", data.user.role);
 
-      // ✅ 🔥 IMPORTANT FIX
+      // ✅ Redirect logic
       const redirectPath = localStorage.getItem("redirectAfterLogin");
 
       if (redirectPath) {
@@ -34,11 +37,11 @@ function Login() {
       } else if (data.user.role === "hr") {
         navigate("/dashboard");
       } else {
-        navigate("/");
+        navigate("/jobs");
       }
-
     } catch (err) {
-      setError(err?.error || "Login failed");
+      console.error(err);
+      setError(err?.response?.data?.message || "Login failed");
     }
   };
 
@@ -53,32 +56,48 @@ function Login() {
         </h2>
 
         {error && (
-          <p className="text-red-500 mb-3">{error}</p>
+          <p className="text-red-500 mb-3 text-sm">{error}</p>
         )}
 
+        {/* Username */}
         <input
+          type="text"
           placeholder="Username"
+          value={form.username}
           className="w-full border p-3 mb-4 rounded"
           onChange={(e) =>
             setForm({ ...form, username: e.target.value })
           }
         />
 
+        {/* Password */}
         <input
           type="password"
           placeholder="Password"
+          value={form.password}
           className="w-full border p-3 mb-4 rounded"
           onChange={(e) =>
             setForm({ ...form, password: e.target.value })
           }
         />
 
-        <button className="w-full bg-blue-600 text-white py-3 rounded">
+        {/* Login Button */}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
+        >
           Login
         </button>
 
+        {/* Register Link */}
         <p className="text-sm text-center mt-4 text-gray-500">
-          HR Login → admin@gmail.com / admin123
+          Don’t have an account?{" "}
+          <Link
+            to="/register"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Register
+          </Link>
         </p>
       </form>
     </div>

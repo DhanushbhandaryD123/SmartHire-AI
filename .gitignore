@@ -8,11 +8,13 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+venv/
 
 # ================= DJANGO =================
 db.sqlite3
 media/
 uploads/
+backend/resumes/
 
 # ================= NODE =================
 node_modules/

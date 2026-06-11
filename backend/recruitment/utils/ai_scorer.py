@@ -4,9 +4,10 @@ from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
-def ai_score_resume(resume_text, job_title, job_description, keywords):
+def ai_score(resume_text, job_title="", job_description="", keywords=None):  # ✅ FIXED NAME
     try:
+        keywords = keywords or []
+
         prompt = f"""
 You are an AI recruiter.
 
@@ -35,7 +36,6 @@ Return STRICT JSON only:
 
         output = response.choices[0].message.content.strip()
 
-        # Clean markdown
         if "```" in output:
             output = output.replace("```json", "").replace("```", "").strip()
 

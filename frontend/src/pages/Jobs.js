@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { getJobs } from "../services/api";
+import { useEffect, useState } from "react";
+import { getJobsPaginated, searchJobs } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function Jobs() {
@@ -7,22 +7,49 @@ function Jobs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  const limit = 6; // jobs per page
   const navigate = useNavigate();
 
+  // 🔥 Debounce (wait 500ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1); // reset page on new search
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // 🔥 Fetch jobs
   useEffect(() => {
     const loadJobs = async () => {
       try {
         setLoading(true);
 
-        const res = await getJobs();
+        let res;
 
-        if (Array.isArray(res)) {
-          setJobs(res);
+        if (debouncedSearch) {
+          res = await searchJobs(debouncedSearch);
         } else {
-          setJobs([]);
+          res = await getJobsPaginated(page, limit);
         }
 
-      } catch (err) {
+        // 🔥 handle both formats
+        if (res?.data) {
+          setJobs(res.data);
+          setTotal(res.total || 0);
+        } else {
+          setJobs(res);
+          setTotal(res.length);
+        }
+
+      } catch {
         setError("Failed to load jobs");
       } finally {
         setLoading(false);
@@ -30,28 +57,27 @@ function Jobs() {
     };
 
     loadJobs();
-  }, []);
+  }, [page, debouncedSearch]);
 
-  // ✅ HANDLE APPLY (FIX)
+  // APPLY
   const handleApply = (jobId) => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
 
-    // ❌ Not logged in
     if (!token) {
-      window.location.href = "/login";
+      navigate("/login");
       return;
     }
 
-    // ❌ HR trying to apply
     if (role !== "candidate") {
       alert("Only candidates can apply");
       return;
     }
 
-    // ✅ Go to apply page
     navigate(`/apply/${jobId}`);
   };
+
+  const totalPages = Math.ceil(total / limit);
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -60,64 +86,88 @@ function Jobs() {
         Career Opportunities
       </h2>
 
+      {/* 🔍 SEARCH */}
+      <div className="mb-6 text-center">
+        <input
+          placeholder="Search jobs..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border p-2 rounded w-full md:w-1/2"
+        />
+      </div>
+
       {/* LOADING */}
-      {loading && (
-        <p className="text-center">Loading jobs...</p>
-      )}
+      {loading && <p className="text-center">Loading...</p>}
 
       {/* ERROR */}
-      {error && (
-        <p className="text-center text-red-500">{error}</p>
-      )}
+      {error && <p className="text-center text-red-500">{error}</p>}
 
       {/* EMPTY */}
       {!loading && jobs.length === 0 && (
-        <p className="text-center">No jobs available</p>
+        <p className="text-center">No jobs found</p>
       )}
 
-      {/* JOB GRID */}
+      {/* JOB LIST */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {jobs.map((job) => (
           <div
             key={job._id}
-            className="bg-white rounded-xl shadow hover:shadow-lg transition p-5"
+            className="bg-white rounded-xl shadow p-5"
           >
-            <h3 className="text-xl font-semibold mb-2">
-              {job.title}
-            </h3>
+            <h3 className="text-xl font-semibold">{job.title}</h3>
 
-            <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-              {job.description}
+            <p className="text-gray-600 text-sm mt-2">
+              {job.description?.slice(0, 100)}...
             </p>
 
-            <p className="text-sm mb-4">
-              <span className="font-semibold">Skills:</span>{" "}
-              {job.keywords?.join(", ") || "N/A"}
-            </p>
-
-            <div className="flex justify-between items-center">
-
+            <div className="flex justify-between mt-4">
               <button
                 onClick={() => navigate(`/jobs/${job._id}`)}
-                className="text-blue-600 text-sm"
+                className="text-blue-600"
               >
-                View Details
+                View
               </button>
 
               <button
-                onClick={() => handleApply(job._id)}   // ✅ FIXED
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                onClick={() => handleApply(job._id)}
+                className="bg-blue-600 text-white px-3 py-1 rounded"
               >
                 Apply
               </button>
-
             </div>
           </div>
         ))}
       </div>
+
+      {/* 📄 PAGINATION */}
+      {!debouncedSearch && totalPages > 1 && (
+        <div className="flex justify-center mt-8 gap-4">
+
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          <span className="px-4 py-2">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+            className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+
+        </div>
+      )}
+
     </div>
   );
 }
 
 export default Jobs;
- 
