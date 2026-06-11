@@ -2,6 +2,12 @@
 
 AI-powered recruitment platform for job posting, resume analysis, and candidate shortlisting.
 
+vercel URL :  https://smart-hire-ai-kappa.vercel.app
+
+Admin UserName : admin@gmail.com
+
+Admin password : admin123
+
 ---
 
 ## 📌 Features
