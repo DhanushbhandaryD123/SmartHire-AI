@@ -20,6 +20,8 @@ backend/resumes/
 node_modules/
 npm-debug.log
 yarn-error.log
+frontend.log
+server.log
 
 # ================= BUILD =================
 build/
